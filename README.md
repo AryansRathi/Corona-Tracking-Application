@@ -61,13 +61,14 @@ Virtual Env
 #### git clone https://github.com/lorenzorota/se-02-team-15.git
 
 #### Install virtual env
-sudo pip3 install virtualenv
+
+ ```sudo pip3 install virtualenv```
 
 #### Create virtual environment
-$ virtualenv env
+```virtualenv env```
 
 #### Start virtual environment
-$ source env/bin/activate
+```source env/bin/activate```
 
 #### Install required dependencies like so:
 
