@@ -70,27 +70,28 @@ $ virtualenv env
 $ source env/bin/activate
 
 #### Install required dependencies like so:
-$ pip install flask
+
+ ``` pip install flask```
  
-$ pip install flask-mysqldb
+``` pip install flask-mysqldb```
 
 #### Install Mysql DB for linux:
  
-$ sudo apt-get install mysql-server
+```sudo apt-get install mysql-server```
  
-$ sudo apt-get install libmysqlclient-dev
+```sudo apt-get install libmysqlclient-dev```
  
-$ pip3 install flask-mysqldb
+```pip3 install flask-mysqldb```
 
 #### Install qr code requirments:
 
-$ pip install qrcode
+``` pip install qrcode ```
  
 ###### Run this command in MYSQL command line to create required database.
 
- mysql> source sql/tables.sql
+``` mysql> source sql/tables.sql ```
 
- mysql> exit
+``` mysql> exit ```
 
  ######  db.yaml file is already created
 
@@ -155,10 +156,10 @@ We were only given a simple frontend implementation from the first srpint. The b
  
  Run this code once you are entire the environment
 
-$ python3 test.py
- 
+``` python3 test.py ```
+  
  If there is any problem while running test and an error like no module named tkinter appears run the command
 
-$ sudo apt-get install python3-tk
+``` sudo apt-get install python3-tk ```
 
  There is also easy way to run this application. Just click on code download the zip file. Unzip it and run the app.py using python3 app.py command and install the requirnments as stated above.
