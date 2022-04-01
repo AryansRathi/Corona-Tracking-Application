@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" rel="text/css" href="{{ url_for('static',filename='css/visitor.css') }}">
+</head>
+
+<body class="body">
+    <nav>
+        <ul>
+            <li class="logo">CoronaArchive</li>
+            <li class="items"><a href="/hospital_registration">Registration</a></li>
+            <li class="items"><a href="/">Home</a></li>
+            <li class="items"><a href="/about">About</a></li>
+            <li class="items"><a href="#">Services</a></li>
+            <li class="items"><a href="/agent_log">Logout</a></li>
+            <li class="btn"><a href="#"><i class="fas fa-bars"></i></a></li>
+        </ul>
+    </nav>
+    <div class="welcome-text">
+        <h1>
+            Welcome<span>Agent</span></h1>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.btn').click(function () {
+                $('.items').toggleClass("show");
+                $('ul li').toggleClass("hide");
+            });
+        });
+    </script>
+</body>
+
+</html>
