@@ -48,6 +48,7 @@ app.secret_key = os.urandom(16)
 def index():
     return render_template('index.html')
 
+"""__________ Registration Code__________________"""
 
 @app.route('/register_visitor', methods=['GET', 'POST'])
 def register_visitor():
@@ -117,15 +118,41 @@ def register_hospital():
 """__________________ Login Codes__________________"""
 
 
-@app.route('/login_hospital')
+@app.route('/login_hospital', methods=['GET', 'POST'])
 def login_hospital():
-    return render_template('login_hospital.html')
+   # Output message if something goes wrong...
+    msg = 'Something went wrong'
+    # Check if "username" and "password" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'user_name' in request.form and 'password' in request.form:
+        # Create variables for easy access
+        user_name = request.form['user_name']
+        password = request.form['password']
+        # Check if account exists using MySQLs
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(
+            'SELECT * FROM HOSPITAL WHERE user_name = %s AND password = %s', (user_name, password,))
+        # Fetch one record and return result
+        account = cursor.fetchone()
+        # If account exists in accounts table in out database
+        if account:
+            # Create session data, we can access this data in other routes
+            session['loggedin'] = True
+            # session['id'] = account['id']
+            session['user_name'] = account['user_name']
+            # Redirect to home page
+            return render_template('index.html')
+        else:
+            # Account doesnt exist or username/password incorrect
+            msg = 'Incorrect username/password!'
+    # Show the login form with message (if any)
+
+    return render_template('login_hospital.html', msg=msg)
 
 
 @app.route('/login_place', methods=['GET', 'POST'])
 def place_log():
     # Output message if something goes wrong...
-    msg = ''
+    msg = 'Something Went wrong'
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'user_name' in request.form and 'password' in request.form:
         # Create variables for easy access
@@ -156,7 +183,7 @@ def place_log():
 @app.route('/login_visitor', methods=['GET', 'POST'])
 def visitor_log():
     # Output message if something goes wrong...
-    msg = ''
+    msg = 'Something Went Wrong'
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'user_name' in request.form and 'password' in request.form:
         # Create variables for easy access
