@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Check In</title>
+    <style>
+        #form-wrapper {
+            padding: 30px;
+            color: white;
+        }
+
+        .alert {
+            font-size: 24px;
+        }
+
+        h1 {
+            color: inherit;
+        }
+    </style>
+</head>
+<style>
+</style>
+<body>
+    {% include 'navbar.html' %}
+    <div id="form-wrapper">
+        <h1 class="text-center mb-5">Check in to {{ place_name }}!</h1>
+        <div class="alert alert-primary mt-5" style="display: none;">
+            Duration of your visit: <span id="time">00:00:00</span>
+        </div>
+        <p id="instruction">Once you press this button, you'll be checked in</p>
+        <button id="check-button" class="btn btn-primary w-100">
+            Check In
+        </button>
+    </div>
+    <form action="/check_in"></form>
+</body>
+<script type="text/javascript">
+
+var button = document.getElementById('check-button');
+var time = document.getElementById('time');
+var timer = time.parentElement;
+var instruction = document.getElementById('instruction');
+
+var checkinTime = null;
+var checkedIn = false;
+var interval = null;
+
+// Adds a 0 in front of the number
+function lead(number) {
+    if (number < 10) {
+        return '0' + number;
+    }
+
+    return number.toString();
+}
+
+// Calculates the string "00:00:00" from diff in seconds
+function getTimeFromDiff(diff) {
+    var hours = Math.floor(diff / 3600);
+    var minutes = Math.floor((diff % 3600) / 60);
+    var seconds = diff % 60;
+
+    // add 0s if necessary and join with :
+    // so produce something like 00:00:05
+    return [hours, minutes, seconds].map(lead).join(':');
+}
+
+// Gets called every second to update the timer
+function stopwatch() {
+    var diff = Math.floor((Date.now() - checkinTime) / 1000);
+    time.innerHTML = getTimeFromDiff(diff);
+}
+
+function checkIn() {
+    checkedIn = true;
+    // Mark the button as red
+    button.className = 'btn btn-danger w-100';
+    button.innerHTML = 'Check Out';
+    instruction.innerHTML = "Once you press this button, you'll be checked out";
+
+    checkinTime = new Date();
+    // Show the timer
+    timer.style.display = 'block';
+    interval = setInterval(stopwatch, 1000);
+}
+
+function checkOut() {
+    checkedIn = false;
+    button.className = 'btn btn-primary w-100';
+    button.innerHTML = 'Check In';
+    instruction.innerHTML = "Once you press this button, you'll be checked in";
+
+    timer.style.display = 'none';
+    time.innerHTML = getTimeFromDiff(0);
+    clearInterval(interval);
+
+    var checkInDate = new Date(checkinTime);
+    var checkOutDate = new Date();
+
+    var entryDate = checkInDate.toISOString().slice(0, 10);
+    var exitDate = checkOutDate.toISOString().slice(0, 10);
+
+    var entryTime = checkInDate.toTimeString().split(' ')[0];
+    var exitTime = checkOutDate.toTimeString().split(' ')[0];
+
+    var formData = new FormData();
+    formData.append('entry_date', entryDate);
+    formData.append('exit_date', exitDate);
+    formData.append('entry_time', entryTime);
+    formData.append('exit_time', exitTime);
+
+    return fetch('/checkin?place={{ place_id }}', {
+        method: 'POST',
+        body: formData,
+    }).then(function(response) {
+        return response.json();
+    }).then(function(response) {
+        if (!response.ok) {
+            return alert(response.message);
+        }
+
+        alert('Successfully sent the visit info to the server!');
+    }).catch(function() {
+        alert('Something went wrong');
+    })
+}
+
+button.onclick = function() {
+    if (!checkedIn) {
+        checkIn();
+    } else {
+        checkOut();
+    }
+}
+
+</script>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'head.html' %}
+    <title>Visitor-login</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <img class="calogo" src=" ../static/img/log.jpg" alt="Corona Archive">
+    <div class="container">
+        {% if msg is defined %}
+            <div class="badge badge-danger d-block mb-5 p-2">{{ msg }}</div>
+        {% endif %}
+        <section id="content">
+            <form action="/login_visitor" method="POST">
+                <input id="csrf_token" name="csrf_token" type="hidden"
+                    value="IjljYzVkMGUwZGJjMmM5Y2E3MGI1ZTY2ZWE0MWNjNmNiZWQ3YmVlZjEi.Yk1O4w.i6T9uoOHL9Y1IOi42iAoGtYnqXQ">
+                <h1>Login</h1>
+                <h2>As a Visitor</h2>
+                <div class="form-group">
+                    <label class="form-control-label" for="username">Username</label>
+                    <input class="form-control form-control-lg" id="username" name="user_name" required="" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="password">Password</label>
+                    <input class="form-control form-control-lg" id="password" name="password" required="" type="password" value="">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" id="remember" name="remember" type="checkbox" value="y">
+                    <label class="form-check-label" for="remember">Stay logged in</label>
+                </div>
+                <div class="form-group">
+                    <a href="/login_visitor">
+                        <input id="submit" name="submit" type="submit" value="Login">
+                    </a>
+                </div>
+                <div class="form-group">
+                    <small>
+                        <a class="ml-2" href="#">Forgot your password?</a>
+                    </small>
+                </div>
+                <div class="form-group">
+                    <small>
+                        <a class="ml-2" href="/register_visitor">Not in the Archive?</a>
+                    </small>
+                </div>
+            </form><!-- form -->
+        </section><!-- content -->
+    </div><!-- container -->
+</body>
+</html>

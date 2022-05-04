@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'head.html' %}
+    <title>Patient Listing</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <style>
+        #table_wrapper {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 20px;
+        }
+
+        #table tr.odd {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        #table tr.infected {
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .mark-healthy, .mark-infected {
+            padding: 5px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <section class="mydiv1">
+        Patient Listing
+    </section>
+    <table id="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr class="{{ 'infected' if user.infected else '' }}">
+                    <td>{{ user.V_id }}</td>
+                    <td>{{ user.Visitor_name }}</td>
+                    <td>{{ user.address }}</td>
+                    <td>{{ user.email_id }}</td>
+                    <td>{{ user.phone_number }}</td>
+                    <td class="status">{{ 'Infected' if user.infected else 'Healthy' }}</td>
+                    <td>
+                        {% if user.infected %}
+                            <button class="btn btn-primary mark-healthy">
+                                Mark as healthy
+                            </button>
+                        {% else %}
+                            <button class="btn btn-danger mark-infected">
+                                Mark as infected
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</body>
+<script>
+    $(document).ready( function () {
+        $('#table').DataTable();
+    });
+
+    // Sends a request to mark the user as infected/healthy
+    function markAs(id, infected) {
+        var formData = new FormData();
+        formData.append('visitor_id', id);
+        formData.append('infected', infected);
+
+        return fetch('/change_visitor_status', {
+            method: 'POST',
+            body: formData,
+        }).then(function(response) {
+            return response.json();
+        })
+    }
+
+    $(document).on('click', '.mark-healthy', function() {
+        var tr = $(this).closest('tr');
+        var visitorId = tr.find('td')[0].innerHTML.trim();
+
+        markAs(visitorId, false);
+
+        $(this).attr('class', 'btn btn-danger mark-infected').html('Mark as infected');
+
+        tr.find('.status').html('Healthy');
+        tr.removeClass('infected');
+    });
+
+    $(document).on('click', '.mark-infected', function() {
+        var tr = $(this).closest('tr');
+        var visitorId = tr.find('td')[0].innerHTML.trim();
+
+        markAs(visitorId, true);
+
+        $(this).attr('class', 'btn btn-primary mark-healthy').html('Mark as healthy');
+        tr.find('.status').html('Infected');
+        tr.addClass('infected');
+    });
+</script>
+</html>

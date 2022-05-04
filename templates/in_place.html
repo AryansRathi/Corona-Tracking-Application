@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'head.html' %}
+    <title>Get your QR Code</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='qrcode.js') }}"></script>
+</head>
+<style>
+    h1 {
+        color: #ff7b7b;
+        margin-top: 0;
+    }
+
+    #qr-code {
+        display: flex;
+        justify-content: center;
+    }
+
+    #qr-code canvas {
+        display: none;
+    }
+
+    #qr-code img {
+        height: 256px;
+        width: 256px;
+    }
+
+    /*
+    Manipulate what part of the page is visible when printing
+    (Only the QR code)
+ */
+    @media print {
+        body {
+            background: none;
+        }
+
+        #buttons,
+        h1,
+        p,
+        form,
+        .w3-bar,
+        .calogo {
+            display: none;
+        }
+
+        #qr-code {
+            display: block !important;
+        }
+
+        #qr-code img {
+            height: 100vw;
+            width: 100vw;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
+<body>
+    {% include 'navbar.html' %}
+    <img class="calogo" src="/static/img/log.jpg" alt="Corona Archive">
+    <section class="mydiv1">
+        <h1>Hello, {{ place_name }}</h1>
+        <div id="qr-code">
+
+        </div>
+        <div id="buttons" class="flex flex-row mt-4">
+            <button id="download" class="btn btn-primary mh-2">
+                Download
+            </button>
+            <button id="print" class="btn btn-secondary mh-2">
+                Print
+            </button>
+        </div>
+    </section>
+
+    <img class="loggo" src="/static/img/map.png" alt="Corona Archive">
+    <form action="/qrcode"></form>
+</body>
+<script type="text/javascript">
+
+    // The current url, without the last component
+    var urlBase = window.location.href.split('/').slice(0, -1).join('/');
+    var url = urlBase + '/checkin?place={{ place_id }}';
+    console.log('Generating QR Code for url', url);
+
+    var qrcode = new QRCode(document.getElementById('qr-code'), {
+        text: url,
+        width: 1024,
+        height: 1024,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+    });
+
+    document.getElementById('print').addEventListener('click', function (e) {
+        window.print();
+    });
+
+    document.getElementById('download').addEventListener('click', function (e) {
+        // QRCode library uses the JS canvas
+        // Convert that JS canvas to a blob, so we can create a blob URL
+        // and force the browser to download that blob (file)
+        qrcode._oDrawing._elCanvas.toBlob(function (blob) {
+            downloadFile(blob, 'code.png');
+        }, 'image/png');
+    });
+
+    function downloadFile(blob, downloadAs) {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = downloadAs;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+</script>
+</html>

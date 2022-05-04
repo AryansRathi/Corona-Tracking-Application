@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include 'head.html' %}
+    <title>Hospital-register</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <img class="calogo" src=" ../static/img/log.jpg" alt="Corona Archive">
+
+    <div class="container">
+        <section id="content">
+            <form action="/register_hospital" method="POST">
+                <h1>Register</h1>
+                <h2>As a Owner</h2>
+                <div class="form-group">
+                    <label class="form-control-label" for="username">Fullname</label>
+
+                    <input class="form-control form-control-lg" id="username" maxlength="15" minlength="3" name="Hospital_name" required="" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="username">Username</label>
+
+                    <input class="form-control form-control-lg" id="username" maxlength="15" minlength="3" name="user_name" required="" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="email">Email</label>
+                    <input class="form-control form-control-lg" id="email" name="email_id" required="" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="phone">Phone</label>
+                    <input class="form-control form-control-lg" id="phone" name="phone_number" type="number" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="address">Address</label>
+                    <input class="form-control form-control-lg" id="phone" name="address" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="password">City</label>
+                    <input class="form-control form-control-lg" id="city" name="city" required="" type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="confirm_password">Password</label>
+                    <input class="form-control form-control-lg" id="password" name="password" required="" type="password" value="">
+                </div>
+                <div class="form-group">
+                    <input id="submit" name="submit" type="submit" value="Register">
+                </div>
+                <div class="form-group">
+                    <small>
+                        Registered already?<a href="/login_place">Log in</a>
+                    </small>
+                </div>
+            </form><!-- form -->
+        </section><!-- content -->
+    </div><!-- container -->
+</body>
+</html>
